@@ -39,16 +39,14 @@ RUN apt-get update && apt-get install -y \
     update-alternatives --install /usr/bin/python python /usr/bin/python${PYTHON_VERSION} 0
 
 # Install bazel
-RUN mkdir /bazel && \
-    cd /bazel && \
-    curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36" -fSsL -O https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
-    curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36" -fSsL -o /bazel/LICENSE.txt https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE && \
-    chmod +x bazel-*.sh && \
-    ./bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
-    cd / && \
-    rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
+RUN curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36" -fSsL -o /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-arm64 && \
+    chmod a+x /usr/bin/bazel
 
 # Install pip dependencies needed for grain
+# NOTE(gspschmid): Constraints should go into quotes to be interpreted correctly?
+# NOTE(gspschmid): Should require "array_record>=0.5.0", since earlier versions were erroneously
+#   published as universal (arch-agnostic) wheels. Since this isn't available at the moment,
+#   adding this constraint would break the build.
 RUN --mount=type=cache,target=/root/.cache \
   python${PYTHON_VERSION} -m pip install -U \
     absl-py \
@@ -57,7 +55,6 @@ RUN --mount=type=cache,target=/root/.cache \
     cloudpickle \
     dm-tree \
     etils[epath] \
-    jaxtyping \
     more-itertools>=9.1.0 \
     numpy;
 
