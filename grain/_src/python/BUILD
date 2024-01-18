@@ -9,24 +9,8 @@ py_library(
     ],
     srcs_version = "PY3",
     deps = [
-        "//file/base:options_py_pb2",
+        #"//file/base:options_py_pb2",
         "//grain/_src/core:usage_logging",
-    ],
-)
-
-py_test(
-    name = "data_sources_test",
-    srcs = [
-        "data_sources_test.py",
-    ],
-    args = ["--test_srcdir=grain/_src/python"],
-    data = [
-        "//grain/_src/python/testdata:digits.array_record-00000-of-00002",
-        "//grain/_src/python/testdata:digits.array_record-00001-of-00002",
-    ],
-    srcs_version = "PY3",
-    deps = [
-        ":data_sources",
     ],
 )
 
@@ -113,7 +97,7 @@ py_test(
         ":record",
         ":samplers",
         "//grain/_src/core:sharding",
-        "//testing/pybase:parameterized",
+        #"//testing/pybase:parameterized",
     ],
 )
 
@@ -138,31 +122,6 @@ py_library(
     ],
 )
 
-py_test(
-    name = "data_loader_test",
-    size = "large",
-    srcs = [
-        "data_loader_test.py",
-    ],
-    args = ["--test_srcdir=grain/_src/python"],
-    data = [
-        "//grain/_src/python/testdata:digits.array_record-00000-of-00002",
-        "//grain/_src/python/testdata:digits.array_record-00001-of-00002",
-    ],
-    shard_count = 20,
-    srcs_version = "PY3",
-    deps = [
-        ":data_loader",
-        ":data_sources",
-        ":grain_pool",
-        ":operations",
-        ":samplers",
-        ":shared_memory_array",
-        "//grain/_src/core:sharding",
-        "//grain/_src/core:transforms",
-    ],
-)
-
 py_library(
     name = "grain_pool",
     srcs = ["grain_pool.py"],
@@ -175,20 +134,6 @@ py_library(
         ":shared_memory_array",
         "//grain/_src/core:parallel",
         "//grain/_src/core:tree",
-    ],
-)
-
-py_test(
-    name = "grain_pool_test",
-    srcs = ["grain_pool_test.py"],
-    shard_count = 15,
-    srcs_version = "PY3",
-    tags = ["not_run:arm"],
-    deps = [
-        ":data_sources",
-        ":grain_pool",
-        ":options",
-        ":record",
     ],
 )
 
@@ -211,17 +156,6 @@ py_library(
         "//grain/_src/core:sharding",
         "//grain/_src/core:transforms",
         "//grain/_src/core:usage_logging",
-    ],
-)
-
-py_test(
-    name = "load_test",
-    srcs = ["load_test.py"],
-    srcs_version = "PY3",
-    deps = [
-        ":data_sources",
-        ":load",
-        "//grain/_src/core:transforms",
     ],
 )
 

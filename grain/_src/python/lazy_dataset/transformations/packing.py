@@ -18,7 +18,6 @@ from typing import Any
 
 from grain._src.core import tree
 from grain._src.python.lazy_dataset import lazy_dataset
-from jaxtyping import PyTree  # pylint: disable=g-importing-member
 import numpy as np
 
 
@@ -81,7 +80,7 @@ class SingleBinPackLazyIterDataset(lazy_dataset.LazyIterDataset):
   def __init__(
       self,
       parent: lazy_dataset.LazyIterDataset,
-      length_struct: PyTree[int | None],
+      length_struct,
   ):
     super().__init__(parent)
     self._length_struct = length_struct
@@ -101,7 +100,7 @@ class SingleBinPackLazyDatasetIterator(lazy_dataset.LazyDatasetIterator):
   def __init__(
       self,
       parent: lazy_dataset.LazyDatasetIterator,
-      length_struct: PyTree[int | None],
+      length_struct,
   ):
     self._parent = parent
     self._length_struct = length_struct

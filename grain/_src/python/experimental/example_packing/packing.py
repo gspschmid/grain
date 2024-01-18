@@ -12,12 +12,11 @@ can't be added, we construct a new batch to which the element is added.
 """
 
 import dataclasses
-from typing import Generic, Iterator, TypeVar, cast
+from typing import Any, Generic, Iterator, TypeVar, cast
 
 from grain._src.core import tree
 from grain._src.python import record
 import jax
-import jaxtyping as jt
 import numpy as np
 
 _T = TypeVar("_T")
@@ -28,9 +27,9 @@ class _PackedBatch:
 
   def __init__(
       self,
-      element_for_shapes: jt.PyTree[np.ndarray],
+      element_for_shapes,
       batch_size: int,
-      length_struct: jt.PyTree[int],
+      length_struct,
   ):
     self._batch_size = batch_size
     self._length_struct = length_struct
@@ -73,7 +72,7 @@ class _PackedBatch:
         data=(self._batch, self._segmentations, self._positions),
     )
 
-  def _can_add_at_row(self, element: jt.PyTree[np.ndarray]) -> int:
+  def _can_add_at_row(self, element) -> int:
     """Returns the index of the first row which fits element, or -1 if none."""
     element_feature_lengths = jax.tree_map(len, element)
 
@@ -110,7 +109,7 @@ class _PackedBatch:
     return -1
 
   def add_element_to_batch(
-      self, element: jt.PyTree[np.ndarray], row: int
+      self, element, row: int
   ) -> None:
     """Adds element to current batch at the specified row."""
     # Apply updates to each feature.
@@ -177,7 +176,7 @@ class PackAndBatchOperation(Generic[_T]):
       embeddings.
   """
 
-  length_struct: jt.PyTree[int]
+  length_struct: Any
   batch_size: int
   # We don't know input shapes and corresponding buffer shapes until __call__.
   _cur_batch: _PackedBatch | None = None
